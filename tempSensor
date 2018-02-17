@@ -1,0 +1,77 @@
+#!/usr/bin/env lua
+
+local sensor = require "ds18b20"
+
+local function printf(fmt, ...)
+   io.stdout:write(string.format(fmt .."\n", ...))
+end
+local function fprintf(fmt, ...)
+   io.stderr:write(string.format(fmt .."\n", ...))
+end
+
+local ids = {
+   "28-041750f0a4ff",
+   "28-04175034dcff",
+   "28-0417515bddff",
+   "28-041750b99bff"
+}
+
+local tusage = {
+   "usage: tempSensor OPTIONS",
+   "OPTIONS:",
+   "  -a           read all sensors",
+   "  -h           show this help",
+   "  -i index     read sensor by index",
+   "  -n name      read sensor by name",
+   "  -v           do not show units",
+   "  -l           list sensors by id"
+}
+function usage()
+   print(table.concat(tusage, "\n"))
+end
+
+function main(...)
+   local args = {select(1, ...)}
+   local i = 1
+   local unit = " °C"
+   while i <= #args do
+      arg = args[i]
+      if arg == "-i" then
+         local ids = sensor.devices()
+         id = ids[tonumber(args[i+1])]
+         if not id then
+            fprintf("invalid sensor index %s", args[i+1])
+            return 1
+         end
+         i = i + 1 
+      elseif arg == "-n" then
+         id = args[i+1]
+         i = i + 1
+      elseif arg == "-h" then
+         usage()
+         return 0
+      elseif arg == "-v" then
+         unit = ""
+      elseif arg == "-a" then
+         local t = sensor.readall()
+         for _, v in ipairs(t) do
+            printf("%s %.1f%s", v.id, v.temp, unit)
+         end
+         return 0
+      elseif arg == "-l" then
+         local t = sensor.devices()
+         printf("%s", table.concat(t, " "))
+         return 0
+      else
+         fprintf("invalid argument %q", arg)
+         return 1
+      end
+      i = i + 1
+   end
+   local temp = sensor.read(id)
+   printf("%.2f%s", temp, unit)
+   return 0
+end
+
+return main(...)
+
