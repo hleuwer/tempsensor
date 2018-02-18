@@ -20,4 +20,4 @@ testsnmp:
 	$(SNMPEXTENDER) -a
 
 clean:
-	rm -rf *~
+	rm -f `find . -name "*~"`
