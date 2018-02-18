@@ -6,12 +6,12 @@ This project provides provides two basic services:
 * A Lua module for reading 1-wire temperature sensors under Linux.
 * An application to allow a local SNMP agent to read the sensor data and place that data in the NET-SNMP extension table extTable.
 
-##ds18B20.lua
+## ds18B20.lua
 This is the Lua module for accessing the sensors.
 
 
 
-##tempSensor
+## tempSensor
 This is an executable Lua programm for extending SNMP agents.
 
 ```usage: tempSensor OPTIONS
@@ -24,7 +24,7 @@ OPTIONS:
   -l           list sensors by` id
 ```
 
-##etc/snmpd.conf
+## etc/snmpd.conf
 Extract to showing how to extend NET-SNMP agent snmpd to use tempSensor as extension.
 
 Call
