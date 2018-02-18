@@ -16,20 +16,6 @@ function devices()
    return t
 end
 
-function __readall()
-   local slaves, entry = {},{}
-   for device in  io.lines("/sys/devices/w1_bus_master1/w1_master_slaves") do
-      local l
-      local slave = {id=device}
-      table.insert(slaves, slave)
-      for s in io.lines("/sys/bus/w1/devices/"..device.."/w1_slave") do
-         l = s
-      end	
-      local temp = string.gsub(l, "(.+t=([%-%w]+))$", "%2")
-      slave.temp = temp/1000
-   end
-end
-
 function read(device)
    local l
    for s in io.lines("/sys/bus/w1/devices/"..device.."/w1_slave") do
